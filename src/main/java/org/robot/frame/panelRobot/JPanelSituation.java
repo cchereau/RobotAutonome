@@ -4,10 +4,6 @@ import javax.swing.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.robot.constante.globalCte.properties_GoogleKeyAPI;
-import static org.robot.constante.globalCte.properties;
-
-
 public class JPanelSituation extends JPanel {
 
     private final JEditorPaneAPIGoogleMap panelGoogle;
@@ -23,8 +19,8 @@ public class JPanelSituation extends JPanel {
         // CONFIGURATION DU PANEL GOOGLE
         /////////////////////////////////////////////////////////////////////////////
         try {
-            panelGoogle.setApiKey(properties.getProperty(properties_GoogleKeyAPI));
-            panelGoogle.setRoadmap(panelGoogle.viewHybrid);
+            panelGoogle.setApiKey("AIzaSyAhNrcx3CrscwK5dbGC7jm_iLGGW28U3zY");
+            //panelGoogle.setRoadmap(panelGoogle.viewHybrid);
 
             /**Afficher la ville de Strabourg*/
             // panelGoogle.showLocation("paris", "france", 390, 400);
