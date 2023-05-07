@@ -1,8 +1,14 @@
 package org.robot.constante;
 
+import java.util.Properties;
+
 public final class globalCte {
-    public static String urlRobotGetData = "http://192.168.0.12/all";
-    public static String urlRobotsetAction = "http://192.168.0.12/Action";
+
+    public static String propertiesFileName = "myRobot.properties";
+    public static Properties properties = new Properties();
+    public static final String properties_GoogleKeyAPI = "API_keyGoogleMap";
+    public static final String properties_URL_GETDATAROBOT= "URL_GET_DATA";
+    public static final String properties_URL_SETDACTIONROBOT= "URL_SET_ACTIONS";
 
     public enum enActionRobot {
         RobotAvant(0, "RobotAvance", 2),
@@ -24,17 +30,13 @@ public final class globalCte {
             this.priority = priority;
         }
 
-        public Integer getValue() {
-            return this.value;
-        }
-
         public String getLabel() {
             return this.label;
         }
-
         public Integer getPriority() {
             return this.priority;
         }
+
     }
 
 }

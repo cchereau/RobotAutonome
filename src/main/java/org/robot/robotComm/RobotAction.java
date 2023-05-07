@@ -29,11 +29,9 @@ public class RobotAction {
     public LocalDateTime getDateTime() {
         return dateTime;
     }
-
     public Boolean isExecuted() {
         return this.blnExecuted;
     }
-
     public void isExecuted(Boolean _blnExecuted) {
         this.blnExecuted = _blnExecuted;
     }

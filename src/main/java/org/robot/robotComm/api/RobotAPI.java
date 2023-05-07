@@ -15,9 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static org.robot.constante.globalCte.urlRobotGetData;
-import static org.robot.constante.globalCte.urlRobotsetAction;
-
+import static org.robot.constante.globalCte.*;
 
 public class RobotAPI {
 
@@ -31,7 +29,7 @@ public class RobotAPI {
         String strMessage = new String();
 
             // Create a neat value object to hold the URL
-            URL url = new URL(urlRobotGetData);
+            URL url = new URL(properties.getProperty(properties_URL_GETDATAROBOT));
             // Open a connection(?) on the URL(??) and cast the response(???)
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
@@ -70,7 +68,7 @@ public class RobotAPI {
         }
         byte[] postDataBytes = postData.toString().getBytes(StandardCharsets.UTF_8);
 
-        URL url = new URL(urlRobotsetAction);
+        URL url = new URL(properties.getProperty(properties_URL_SETDACTIONROBOT));
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
 

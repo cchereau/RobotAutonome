@@ -12,6 +12,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static org.robot.constante.globalCte.enActionRobot.DataRobot;
@@ -19,23 +20,21 @@ import static org.robot.constante.globalCte.enActionRobot.DataRobot;
 public class Robot extends Thread {
     private final RobotAPI robotAPI;
     //private Timer timer;
-    private final HashMap<LocalDateTime, RobotAction> robotActions;
+    private final HashMap<LocalDateTime, RobotAction> robotActions = new HashMap<>();
     protected EventListenerList eventListeners = new EventListenerList();
-    Map<LocalDateTime, RobotAction> mapActionRobotNonExecuted;
-    Map<LocalDateTime, RobotAction> mapActioRobotPriorty;
-    Map<LocalDateTime, RobotAction> mapActioRobotSortOlder;
     JSONDataRobotReturnAction dataRobotResultAction;
     JSONDataRobot dataRobot;
-    private JSONDataRobot robotStatus;
-    private JSONDataRobotReturnAction robotSetAction;
-    private String orderResult;
-    private boolean running = true;
+    Map<LocalDateTime, RobotAction> mapActionRobotNonExecuted ;
+    Map<LocalDateTime, RobotAction> mapActioRobotPriorty;
+    Map<LocalDateTime, RobotAction> mapActioRobotSortOlder;
+
+    private boolean running;
 
 
     public Robot() {
 
         this.robotAPI = new RobotAPI();
-        robotActions = new HashMap<>();
+        this.running=true;
     }
 
     public JSONDataRobotReturnAction getDataRobotResultAction() {
@@ -56,9 +55,11 @@ public class Robot extends Thread {
         System.out.println("je suis le Thread du robot et je tourne une fois");
 
         while (running) {
+
             try {
                 System.out.println("je suis le Thread du robot et je tourne tout seul");
-                if (this.robotActions.isEmpty())
+                mapActionRobotNonExecuted = filterOnNonExecute(robotActions);
+                if (this.mapActionRobotNonExecuted.isEmpty())
                     this.addAction(DataRobot, 0);
 
                 // on regarde si besoin de relancer le robot filtre sur les actions non executée
@@ -67,9 +68,10 @@ public class Robot extends Thread {
                 mapActioRobotSortOlder = orderByOLdest(mapActioRobotPriorty);
 
                 // si on a rien à faire alors on demande des information du statut
-                if (!mapActioRobotSortOlder.isEmpty()) {
-                    LocalDateTime keyMap = mapActioRobotSortOlder.keySet().stream().findFirst().get();
-                    RobotAction robotAction = mapActioRobotSortOlder.get(keyMap);
+                 if (!mapActioRobotSortOlder.isEmpty()) {
+
+                    LocalDateTime keyMap = mapActionRobotNonExecuted.keySet().stream().findFirst().get();
+                    RobotAction robotAction = robotActions.get(keyMap);
                     try {
                         if (robotAction.getActionRobot() == DataRobot) {
                             dataRobot = robotAPI.getDataRobot();
@@ -112,14 +114,6 @@ public class Robot extends Thread {
     }
 
 
-    private Map<LocalDateTime, RobotAction> orderOnPriorities(Map<LocalDateTime, RobotAction> _map) {
-        Comparator<RobotAction> byPriority = (RobotAction obj1, RobotAction obj2) -> obj2.getActionRobot().getPriority().compareTo(obj1.getActionRobot().getPriority());
-
-        return _map.entrySet().stream()
-                .sorted(Map.Entry.comparingByValue(byPriority))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-    }
-
     private Map<LocalDateTime, RobotAction> orderByOLdest(Map<LocalDateTime, RobotAction> _map) {
         return _map
                 .entrySet()
@@ -131,11 +125,24 @@ public class Robot extends Thread {
                         LinkedHashMap::new));
     }
 
-    private Map<LocalDateTime, RobotAction> filterOnNonExecute(Map<LocalDateTime, RobotAction> _map) {
-        return _map.entrySet().stream().
-                filter(map -> !map.getValue().isExecuted()).
-                collect(Collectors.toMap(map -> map.getKey(), map -> map.getValue()));
+    private Map<LocalDateTime, RobotAction> orderOnPriorities(Map<LocalDateTime, RobotAction> _map) {
+        Comparator<RobotAction> byPriority = (RobotAction obj1, RobotAction obj2) -> obj2.getActionRobot().getPriority().compareTo(obj1.getActionRobot().getPriority());
+
+        return _map.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(byPriority))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
+
+    private Map<LocalDateTime, RobotAction> filterOnNonExecute(Map<LocalDateTime, RobotAction> _map) {
+
+        Map<LocalDateTime,RobotAction> hashMapfilter;
+        hashMapfilter= _map.entrySet().stream().filter(y -> !y.getValue().isExecuted())
+                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()) );
+        return hashMapfilter;
+    }
+
+
+
 
 }
 

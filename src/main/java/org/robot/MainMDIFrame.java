@@ -4,6 +4,7 @@
 
 package org.robot;
 
+import org.robot.constante.globalCte;
 import org.robot.frame.JInternalFrameRobot;
 
 import javax.swing.*;
@@ -12,6 +13,12 @@ import javax.swing.event.InternalFrameListener;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import java.awt.*;
 import java.beans.PropertyVetoException;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import static org.robot.constante.globalCte.properties;
+import static org.robot.constante.globalCte.propertiesFileName;
 
 
 public class MainMDIFrame extends JFrame implements InternalFrameListener {
@@ -22,6 +29,21 @@ public class MainMDIFrame extends JFrame implements InternalFrameListener {
 
     public MainMDIFrame() {
         super("JDesktopPane / JInternalFrame sample");
+
+        // chargement du fichier de propriétées
+        FileInputStream in = null;
+        try {
+            in = new FileInputStream(propertiesFileName);
+            properties.load(in);
+            in.close();
+        } catch (IOException e) {
+            System.out.println("MainMDIFrameJava - Fichier de Propriété");
+            throw new RuntimeException(e);
+        }
+
+
+
+
 
         internalFramePtf = new JInternalFrameRobot();
         desktopPane.add(internalFramePtf);
