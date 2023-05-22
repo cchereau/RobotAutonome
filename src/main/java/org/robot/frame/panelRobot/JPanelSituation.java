@@ -1,8 +1,12 @@
 package org.robot.frame.panelRobot;
 
+import org.robot.constante.globalCte;
+
 import javax.swing.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static org.robot.constante.globalCte.properties;
 
 public class JPanelSituation extends JPanel {
 
@@ -19,17 +23,16 @@ public class JPanelSituation extends JPanel {
         // CONFIGURATION DU PANEL GOOGLE
         /////////////////////////////////////////////////////////////////////////////
         try {
-            panelGoogle.setApiKey("AIzaSyAhNrcx3CrscwK5dbGC7jm_iLGGW28U3zY");
-            //panelGoogle.setRoadmap(panelGoogle.viewHybrid);
-
-            /**Afficher la ville de Strabourg*/
-            // panelGoogle.showLocation("paris", "france", 390, 400);
+            panelGoogle.setApiKey(properties.getProperty(globalCte.properties_API_KEY));
+            panelGoogle.setRoadmap(panelGoogle.viewHybrid);
 
             /** Afficher Paris en fonction ses coordonnées GPS */
             panelGoogle.showCoordinate("48.9068908691", "2.1749124527", 800, 400);
+            panelGoogle.setZoom(100);
         } catch (Exception ex) {
             Logger.getLogger(JEditorPaneAPIGoogleMap.class.getName()).log(Level.SEVERE, null, ex);
         }
+        this.add(panelGoogle);
 
 
     }

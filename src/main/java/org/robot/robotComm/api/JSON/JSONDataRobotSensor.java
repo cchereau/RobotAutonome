@@ -9,13 +9,13 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 
-public class JSONDataRobot {
+public class JSONDataRobotSensor {
 
     private final LocalDateTime dateTime;
     //public final String time;
     private final Double longitude;
     private final Double latitude;
-    private final Integer azimut;
+    private Integer azimut;
     private final Float vitesse;
     private final Float vChenilleDroite;
     private final Float vChenilleGauche;
@@ -25,18 +25,18 @@ public class JSONDataRobot {
     private final Float distance;
 
 
-    public JSONDataRobot(@JsonProperty("date") String date,
-                         @JsonProperty("time") String time,
-                         @JsonProperty("longitude") String longitude,
-                         @JsonProperty("latitude") String latitude,
-                         @JsonProperty("azimut") String azimut,
-                         @JsonProperty("vitesse") String vitesse,
-                         @JsonProperty("vChenilleDroite") String vChenilleDroite,
-                         @JsonProperty("vChenilleGauche") String vChenilleGauche,
-                         @JsonProperty("temperature") String temperature,
-                         @JsonProperty("humidite") String humidite,
-                         @JsonProperty("angle") String angle,
-                         @JsonProperty("distance") String distance
+    public JSONDataRobotSensor(@JsonProperty("date") String date,
+                               @JsonProperty("time") String time,
+                               @JsonProperty("longitude") String longitude,
+                               @JsonProperty("latitude") String latitude,
+                               @JsonProperty("azimut") String azimut,
+                               @JsonProperty("vitesse") String vitesse,
+                               @JsonProperty("vChenilleDroite") String vChenilleDroite,
+                               @JsonProperty("vChenilleGauche") String vChenilleGauche,
+                               @JsonProperty("temperature") String temperature,
+                               @JsonProperty("humidite") String humidite,
+                               @JsonProperty("angle") String angle,
+                               @JsonProperty("distance") String distance
     ) throws Exception {
         dateTime = getDateTime(date, time);
         this.longitude = Double.valueOf(longitude);
@@ -51,7 +51,7 @@ public class JSONDataRobot {
         this.distance = Float.valueOf(distance);
     }
 
-    public JSONDataRobot() {
+    public JSONDataRobotSensor() {
         dateTime = LocalDateTime.now();
         this.longitude = Double.valueOf(0d);
         this.latitude = Double.valueOf(0d);
@@ -141,11 +141,13 @@ public class JSONDataRobot {
         String time = _time.substring(0, _time.length() - 2);
         time = String.format("%06d", Integer.valueOf(time));
         // mise eu format de la date
-        String strDateTime = date + " " + time;
         DateTimeFormatter formatter = DateTimeFormat.forPattern("ddMMyy HHmmss");
         String dateInString = date + " " + time;
         return DateTime.parse(dateInString, formatter).toLocalDateTime();
     }
 
 
+    public void setAzimut(int azimut) {
+        this.azimut = azimut;
+    }
 }

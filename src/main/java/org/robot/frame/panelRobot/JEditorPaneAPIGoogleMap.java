@@ -6,7 +6,7 @@ import javax.swing.text.html.HTMLEditorKit;
 
 /**
  * Afficher une carte GoogleMap dans un JEditorPane
- * http://www.fobec.com/java/922/afficher-une-carte-avec-api-google-map.html
+ * <a href="http://www.fobec.com/java/922/afficher-une-carte-avec-api-google-map.html">...</a>
  *
  * @author fobec 2010
  */

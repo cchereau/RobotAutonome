@@ -4,7 +4,6 @@
 
 package org.robot;
 
-import org.robot.constante.globalCte;
 import org.robot.frame.JInternalFrameRobot;
 
 import javax.swing.*;
@@ -14,7 +13,6 @@ import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import java.awt.*;
 import java.beans.PropertyVetoException;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import static org.robot.constante.globalCte.properties;
@@ -23,15 +21,11 @@ import static org.robot.constante.globalCte.propertiesFileName;
 
 public class MainMDIFrame extends JFrame implements InternalFrameListener {
 
-    //public static final Robot robot = new Robot();
-    private final JDesktopPane desktopPane = new JDesktopPane();
-    private JInternalFrameRobot internalFramePtf;
-
     public MainMDIFrame() {
         super("JDesktopPane / JInternalFrame sample");
 
         // chargement du fichier de propriétées
-        FileInputStream in = null;
+        FileInputStream in;
         try {
             in = new FileInputStream(propertiesFileName);
             properties.load(in);
@@ -42,10 +36,9 @@ public class MainMDIFrame extends JFrame implements InternalFrameListener {
         }
 
 
-
-
-
-        internalFramePtf = new JInternalFrameRobot();
+        JInternalFrameRobot internalFramePtf = new JInternalFrameRobot();
+        //public static final Robot robot = new Robot();
+        JDesktopPane desktopPane = new JDesktopPane();
         desktopPane.add(internalFramePtf);
         internalFramePtf.setVisible(true);
         try {
@@ -81,7 +74,7 @@ public class MainMDIFrame extends JFrame implements InternalFrameListener {
 
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         //test de l'ap pel unique
         System.out.println("Lancement du Robot");
         SwingUtilities.invokeLater(() -> {
@@ -113,7 +106,6 @@ public class MainMDIFrame extends JFrame implements InternalFrameListener {
 
     @Override
     public void internalFrameClosed(InternalFrameEvent e) {
-        System.out.println("MainMDI Frame - CLosed Frame ");
     }
 
     @Override

@@ -3,9 +3,9 @@ package org.robot.robotComm.api.JSON;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class JSONDataRobotReturnAction {
-    private Integer direction;
-    private Integer valeur;
-    private String returnString;
+    private final Integer direction;
+    private final Integer valeur;
+    private final String returnString;
 
     public JSONDataRobotReturnAction(@JsonProperty("action") String direction,
                                      @JsonProperty("value") String valeur,
@@ -13,8 +13,9 @@ public class JSONDataRobotReturnAction {
         this.direction = Integer.valueOf(direction);
         this.valeur = Integer.valueOf(valeur);
         this.returnString = returnString;
-
     }
+
+
 
     public JSONDataRobotReturnAction() {
         this.direction = -1;
@@ -27,7 +28,7 @@ public class JSONDataRobotReturnAction {
         return " ActionRobot{ " +
                 "action=" + this.direction.toString() + "," +
                 "value=" + this.valeur.toString() + "," +
-                "status=" + returnString.toString() + "}";
+                "status=" + returnString + "}";
     }
 
 

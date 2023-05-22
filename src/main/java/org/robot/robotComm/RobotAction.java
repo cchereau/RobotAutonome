@@ -13,7 +13,6 @@ public class RobotAction {
     private enActionRobot actionRobot;
     private Integer Value;
     private Boolean blnExecuted;
-
     public RobotAction(enActionRobot actionRobot, Integer value) {
         this.dateTime = LocalDateTime.now();
         this.actionRobot = actionRobot;
@@ -36,3 +35,6 @@ public class RobotAction {
         this.blnExecuted = _blnExecuted;
     }
 }
+
+
+

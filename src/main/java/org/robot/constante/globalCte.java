@@ -6,9 +6,9 @@ public final class globalCte {
 
     public static String propertiesFileName = "myRobot.properties";
     public static Properties properties = new Properties();
-    public static final String properties_GoogleKeyAPI = "API_keyGoogleMap";
     public static final String properties_URL_GETDATAROBOT= "URL_GET_DATA";
     public static final String properties_URL_SETDACTIONROBOT= "URL_SET_ACTIONS";
+    public static final String properties_API_KEY = "API_keyGoogleMap";
 
     public enum enActionRobot {
         RobotAvant(0, "RobotAvance", 2),
@@ -19,12 +19,13 @@ public final class globalCte {
         RadarDroite(5, "RadarDroite", 1),
         RadarGauche(6, "RadarGauche", 1),
         DataRobot(7, "DataRobotAll", 3),
+        SystemRobot(8,"RebootRobot", 0),
         undefined(7, "Unedefined", 4);
-        Integer value;
-        String label;
-        Integer priority;
+        final Integer value;
+        final String label;
+        final Integer priority;
 
-        private enActionRobot(Integer value, String label, Integer priority) {
+        enActionRobot(Integer value, String label, Integer priority) {
             this.value = value;
             this.label = label;
             this.priority = priority;

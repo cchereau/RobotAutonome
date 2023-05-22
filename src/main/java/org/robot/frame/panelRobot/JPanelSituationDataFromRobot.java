@@ -1,7 +1,7 @@
 package org.robot.frame.panelRobot;
 
 import org.robot.frame.fntGUI.FntGUI;
-import org.robot.robotComm.api.JSON.JSONDataRobot;
+import org.robot.robotComm.api.JSON.JSONDataRobotSensor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -79,7 +79,7 @@ public class JPanelSituationDataFromRobot extends JPanel {
 
 
 
-    public void set(JSONDataRobot dataRobot) {
+    public void set(JSONDataRobotSensor dataRobot) {
         try{
             lblDate.setText( strDateTIme+ dataRobot.getDateTime().toString());
             lblLongitude.setText(strLongitude+ dataRobot.getLongitude().toString());
@@ -90,7 +90,7 @@ public class JPanelSituationDataFromRobot extends JPanel {
             lblVitesseChenilleGauche.setText(strVitesseChenilleGauche+ dataRobot.getvChenilleGauche().toString());
             lblTemperature.setText(strTemperature+dataRobot.getTemperature().toString());
             lblHumidite.setText(strHumidite+dataRobot.getHumidite().toString());
-            lblAngle.setText(strANgle+ Integer.toString(dataRobot.getAngle()-90));
+            lblAngle.setText(strANgle+ (dataRobot.getAngle() - 90));
             lblDistance.setText(strDistance+ dataRobot.getDistance().toString());
         }catch (Exception e) {
             System.out.println(" JPanelSituationDataFromRobot - dateUpdated() ");

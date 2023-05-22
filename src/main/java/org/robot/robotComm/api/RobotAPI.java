@@ -3,7 +3,7 @@ package org.robot.robotComm.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.ValueInstantiationException;
 import org.robot.constante.globalCte.enActionRobot;
-import org.robot.robotComm.api.JSON.JSONDataRobot;
+import org.robot.robotComm.api.JSON.JSONDataRobotSensor;
 import org.robot.robotComm.api.JSON.JSONDataRobotReturnAction;
 
 import java.io.IOException;
@@ -18,15 +18,16 @@ import java.util.Map;
 import static org.robot.constante.globalCte.*;
 
 public class RobotAPI {
-
+    private boolean blnDebug = false;
 
     public RobotAPI() {
+
     }
 
 
-    //    public RobotAPIDataReturnStatus getDataRobot() throws Exception {
-    public JSONDataRobot getDataRobot() throws IOException{
-        String strMessage = new String();
+    public JSONDataRobotSensor getDataRobot() throws IOException{
+
+            if (blnDebug) return new JSONDataRobotSensor();
 
             // Create a neat value object to hold the URL
             URL url = new URL(properties.getProperty(properties_URL_GETDATAROBOT));
@@ -39,21 +40,14 @@ public class RobotAPI {
             // This line makes the request
             InputStream responseStream = connection.getInputStream();
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(responseStream, JSONDataRobot.class);
+            return mapper.readValue(responseStream, JSONDataRobotSensor.class);
 
-            /*byte[] array = new byte[responseStream.available()];
-            responseStream.read(array);
-            strMessage = new String(array);
-
-            // Manually converting the response body InputStream to APOD using Jackson
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(strMessage, JSONReturnStatus.class);
-            */
     }
 
 
     public JSONDataRobotReturnAction setActionRobot(enActionRobot actionRobot, Integer valeur) throws IOException {
 
+        if (blnDebug) return new JSONDataRobotReturnAction();
 
         Map<String, Object> params = new LinkedHashMap<>();
         params.put("action", actionRobot.getLabel());

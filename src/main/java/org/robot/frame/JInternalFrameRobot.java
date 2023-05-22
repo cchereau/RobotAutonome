@@ -3,10 +3,10 @@ package org.robot.frame;
 import org.robot.frame.panelRobot.JPanelAction;
 import org.robot.frame.panelRobot.JPanelSituation;
 import org.robot.frame.panelRobot.JPanelSituationDataFromRobot;
-import org.robot.robotComm.EventListnerRobotDataReady;
+import org.robot.robotComm.EventListnerRobot;
 import org.robot.robotComm.Robot;
-import org.robot.robotComm.api.EventDataRobot;
-import org.robot.robotComm.api.JSON.JSONDataRobot;
+import org.robot.robotComm.api.JSON.JSONDataRobotSensor;
+import org.robot.robotComm.api.JSON.JSONDataRobotReturnAction;
 
 import javax.swing.*;
 import javax.swing.event.InternalFrameEvent;
@@ -18,24 +18,23 @@ import java.awt.*;
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-public class JInternalFrameRobot extends JInternalFrame implements EventListnerRobotDataReady {
+public class JInternalFrameRobot extends JInternalFrame implements EventListnerRobot {
 
     private final JPanelAction panelAction;
-    private final JPanelSituation panelSituation;
     private final JPanelSituationDataFromRobot panelDataFromRobot;
-    private Robot robot;
+    private final Robot robot;
 
     public JInternalFrameRobot() {
-        super("Robot V0.12", false, true, false, false);
+        super("Robot V0.12", true, true, true, true);
 
         panelAction = new JPanelAction();
-        panelSituation = new JPanelSituation();
+        JPanelSituation panelSituation = new JPanelSituation();
         panelDataFromRobot=new JPanelSituationDataFromRobot();
 
         this.addInternalFrameListener(new InternalFrameListener() {
             @Override
             public void internalFrameOpened(InternalFrameEvent e) {
-                System.out.println(this.getClass().getCanonicalName() + " -  internal Frame Opened");
+                System.out.println("JInternalFrameRobot.java  -  internal Frame Opened");
 
             }
 
@@ -47,13 +46,17 @@ public class JInternalFrameRobot extends JInternalFrame implements EventListnerR
                     System.out.println(this.getClass().getName() + " - Je tue le robot");
                     robot.arret();
                     dispose();
+                } else {
+                    System.out.println(this.getClass().getName() + " - Je tue le robot");
+                    robot.arret();
+                    dispose();
                 }
             }
 
             @Override
             public void internalFrameClosed(InternalFrameEvent e) {
-                System.out.println(this.getClass().getCanonicalName() + " -  internal Frame Closed");
-
+                System.out.println("JInternalFrameRobot.java -  internal Frame Closed");
+                robot.arret();
             }
 
             @Override
@@ -86,7 +89,7 @@ public class JInternalFrameRobot extends JInternalFrame implements EventListnerR
         // affectatop du robot sur les Panel
         panelAction.attachRobot(robot);
 
-        JSplitPane secondSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,panelSituation,panelDataFromRobot);
+        JSplitPane secondSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panelSituation,panelDataFromRobot);
         secondSplitPane.setResizeWeight(0.5d);
         secondSplitPane.setSize(new Dimension());
 
@@ -108,9 +111,17 @@ public class JInternalFrameRobot extends JInternalFrame implements EventListnerR
 
 
     @Override
-    public void DataRobotReady(JSONDataRobot dataRobot) {
+    public void DataRobotReady(JSONDataRobotSensor dataRobot) {
         panelDataFromRobot.set(robot.getDataRobot());
-        panelDataFromRobot.repaint();
 
     }
+
+    @Override
+    public void DataReturnActionRobot(JSONDataRobotReturnAction dataReturn) {
+        panelAction.setDataRobotReturnAction(robot.getDataRobotResultAction());
+
+    }
+
+
+
 }
