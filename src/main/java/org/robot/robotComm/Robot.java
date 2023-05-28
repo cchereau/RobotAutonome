@@ -2,155 +2,158 @@ package org.robot.robotComm;
 
 import org.joda.time.LocalDateTime;
 import org.robot.constante.globalCte.enActionRobot;
-import org.robot.robotComm.api.JSON.JSONDataRobotSensor;
 import org.robot.robotComm.api.JSON.JSONDataRobotReturnAction;
+import org.robot.robotComm.api.JSON.JSONDataRobotSensor;
 import org.robot.robotComm.api.RobotAPI;
+import org.robot.robotComm.controles.Controle;
+import org.robot.robotComm.sequences.Sequence;
+import org.robot.robotComm.sequences.SequenceRobotKeepAlive;
+import org.robot.robotComm.sequences.SequenceRobotTurn;
 
 import javax.swing.event.EventListenerList;
-import java.io.IOException;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.robot.constante.globalCte.enActionRobot.DataRobot;
+import static org.robot.constante.globalCte.enActionRobot.*;
 
 public class Robot extends Thread {
     private final RobotAPI robotAPI;
     private enActionRobot statusRobot;
+
     private final HashMap<LocalDateTime, RobotAction> robotActions = new HashMap<>();
+    private NavigableMap<LocalDateTime,JSONDataRobotSensor> datasRobot = new TreeMap<>();
+
     protected EventListenerList eventListeners = new EventListenerList();
     private JSONDataRobotReturnAction dataRobotResultAction;
     private JSONDataRobotSensor dataRobotSensor;
-    private Map<LocalDateTime, RobotAction> mapActionRobotNonExecuted ;
-    private Map<LocalDateTime, RobotAction> mapActioRobotPriorty;
-    private Map<LocalDateTime, RobotAction> mapActioRobotSortOlder;
+    private final Controle controle;
 
     public enActionRobot getStatusMobility() {
         return this.statusRobot;
     }
-
-    private enum entypeDataReceived{DataSensor,DataAction};
-
-
     private boolean running;
 
-
     public Robot() {
-
+        controle = new Controle();
         this.robotAPI = new RobotAPI();
-        this.running=true;
+        this.running = true;
         this.statusRobot = enActionRobot.RobotStop;
     }
-    public JSONDataRobotReturnAction getDataRobotResultAction() {
-        return this.dataRobotResultAction;
-    }
-    public JSONDataRobotSensor getDataRobot() {
-        return this.dataRobotSensor;
-    }
+
     @Override
     public void run() {
         while (running) {
             try {
-                System.out.println("je suis le Thread du robot et je tourne tout seul");
-                mapActionRobotNonExecuted = filterOnNonExecute(robotActions);
-                if (this.mapActionRobotNonExecuted.isEmpty())
-                    this.addAction(DataRobot, 0);
-
                 // on regarde si besoin de relancer le robot filtre sur les actions non executée
-                mapActionRobotNonExecuted = filterOnNonExecute(robotActions);
-                mapActioRobotPriorty = orderOnPriorities(mapActionRobotNonExecuted);
-                mapActioRobotSortOlder = orderByOldest(mapActioRobotPriorty);
+                Map<LocalDateTime, RobotAction> mapActionRobotNonExecuted = filterOnNonExecute(this.robotActions);
 
-                // si on a rien à faire alors on demande des information du statut
-                 if (!mapActioRobotSortOlder.isEmpty()) {
-                    LocalDateTime keyMap = mapActionRobotNonExecuted.keySet().stream().findFirst().get();
-                    RobotAction robotAction = robotActions.get(keyMap);
-                        if (robotAction.getActionRobot() == DataRobot) {
-                            try {
-                                dataRobotSensor = robotAPI.getDataRobot();
-                                fireDataUpdatedFromRobot(entypeDataReceived.DataSensor);
-                            } catch (IOException io) {
-                                System.out.println("ROBOT.java -> Exception Retrieve JSON DATA" + io.getMessage());
-                            }
-                        } else {
-                            try {
-                                dataRobotResultAction = robotAPI.setActionRobot(robotAction.getActionRobot(), robotAction.getValue());
-                                fireDataUpdatedFromRobot(entypeDataReceived.DataAction);
+                if (mapActionRobotNonExecuted.isEmpty())
+                    this.addAction(RobotControl, 0);
 
-                                switch (robotAction.getActionRobot())
-                                {
-                                    case RobotArriere, RobotAvant, RobotDroite, RobotGauche, RobotStop:statusRobot = robotAction.getActionRobot();break;
-                                    default:break;
-                                }
+                mapActionRobotNonExecuted.put(LocalDateTime.now(), new RobotAction(RobotData, 0));
 
-
-                            } catch (IOException io) {
-                                System.out.println("ROBOT.java -> Exception Send Data" + io.getMessage());
-                            }
-                        }
-                        robotAction.isExecuted(true);
+                // lecture de toutes les actions à faire pour arriver à l'action demandée.
+                for (Map.Entry<LocalDateTime, RobotAction> entry : mapActionRobotNonExecuted.entrySet()) {
+                    switch (entry.getValue().getActionRobot()) {
+                        case RobotData:
+                            dataRobotSensor = robotAPI.getDataRobot();
+                            addValidatedData(dataRobotSensor);
+                            fireDataUpdatedFromRobot(entypeDataReceived.DataSensor);
+                            break;
+                        case RobotControl:
+                            Map.Entry<LocalDateTime, JSONDataRobotSensor> lastEntry = datasRobot.lastEntry();
+                            if (controle.isValidated(lastEntry.getValue().getDistance())) this.addAction(RobotStop, 0);
+                            fireDataUpdatedFromRobot(entypeDataReceived.DataAction);
+                            break;
+                        default:
+                            dataRobotResultAction = robotAPI.setActionRobot(entry.getValue().getActionRobot(), entry.getValue().getValue());
+                            this.statusRobot = entry.getValue().getActionRobot();
+                            fireDataUpdatedFromRobot(entypeDataReceived.DataAction);
+                            break;
+                    }
+                    entry.getValue().isExecuted(true);
+                    Thread.sleep(500);
                 }
-                Thread.sleep(500);
             } catch (InterruptedException io) {
                 System.out.println(this.getClass().getCanonicalName() + "-  PROCESS ROBOT API STOPED");
                 throw new RuntimeException(io);
             }
+
         }
     }
+
+    public JSONDataRobotReturnAction getDataRobotResultAction() {
+        return this.dataRobotResultAction;
+    }
+
+    public JSONDataRobotSensor getDataRobot() {
+        return this.dataRobotSensor;
+    }
+
     public void arret() {
         running = false;
     }
+
     public void addAction(enActionRobot actionRobot, Integer dataRobot) {
+        Sequence sequence;
         RobotAction robotAction = new RobotAction(actionRobot, dataRobot);
-        this.robotActions.put(robotAction.getDateTime(), robotAction);
+        // récupération des séquences d'action du robot
+        switch (robotAction.getActionRobot()) {
+            case RobotArriere, RobotAvant, RobotStop, RobotGauche, RobotRadarGauche, RobotRadarDroite:
+                this.robotActions.put(robotAction.getDateTime(), robotAction);
+                break;
+
+            case RobotDroite:
+                sequence = new SequenceRobotTurn(robotAction);
+                this.robotActions.putAll(sequence.getActions());
+                break;
+
+            case RobotControl:
+                sequence = new SequenceRobotKeepAlive(robotAction);
+                this.robotActions.putAll(sequence.getActions());
+                break;
+
+
+            default:
+
+                break;
+        }
+
     }
+
     public void addEventListnerDataRobotReturnAction(EventListnerRobot eventListnerRobotDataReady) {
         eventListeners.add(EventListnerRobot.class, eventListnerRobotDataReady);
     }
+
     protected void fireDataUpdatedFromRobot(entypeDataReceived dataAction) {
         Object[] listeners = eventListeners.getListenerList();
 
         for (int i = 0; i < listeners.length; i = i + 2) {
             if (listeners[i] == EventListnerRobot.class) {
-                switch (dataAction)
-                {
+                switch (dataAction) {
                     case DataSensor -> ((EventListnerRobot) listeners[i + 1]).DataRobotReady(dataRobotSensor);
-                    case DataAction -> ((EventListnerRobot) listeners[i + 1]).DataReturnActionRobot(dataRobotResultAction);
+                    case DataAction ->
+                            ((EventListnerRobot) listeners[i + 1]).DataReturnActionRobot(dataRobotResultAction);
                 }
             }
         }
     }
 
-    // filtre sur les Map
-    private Map<LocalDateTime, RobotAction> orderByOldest(Map<LocalDateTime, RobotAction> _map) {
-        return _map
-                .entrySet()
-                .stream()
-                .sorted(Map.Entry.<LocalDateTime, RobotAction>comparingByKey().reversed())
-                .collect(Collectors.toMap(Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (oldVal, newValue) -> oldVal,
-                        LinkedHashMap::new));
-    }
-    private Map<LocalDateTime, RobotAction> orderOnPriorities(Map<LocalDateTime, RobotAction> _map) {
-        Comparator<RobotAction> byPriority = (RobotAction obj1, RobotAction obj2) -> obj2.getActionRobot().getPriority().compareTo(obj1.getActionRobot().getPriority());
+    private void addValidatedData(JSONDataRobotSensor dataInput){
 
-        return _map.entrySet().stream()
-                .sorted(Map.Entry.comparingByValue(byPriority))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        if(datasRobot.size()==0) datasRobot.put(LocalDateTime.now(), new JSONDataRobotSensor());
+        if(dataInput.getDistance()>0)
+            datasRobot.put(LocalDateTime.now(),dataInput);                // sauvegarde de la data
+
     }
+
     private Map<LocalDateTime, RobotAction> filterOnNonExecute(Map<LocalDateTime, RobotAction> _map) {
-
-        Map<LocalDateTime,RobotAction> hashMapfilter;
-        hashMapfilter= _map.entrySet().stream().filter(y -> !y.getValue().isExecuted())
-                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()) );
+        Map<LocalDateTime, RobotAction> hashMapfilter;
+        hashMapfilter = _map.entrySet().stream().filter(y -> !y.getValue().isExecuted())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         return hashMapfilter;
     }
-
-
-
+    private enum entypeDataReceived {DataSensor, DataAction}
 
 }
 

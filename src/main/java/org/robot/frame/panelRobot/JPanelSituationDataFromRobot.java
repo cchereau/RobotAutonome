@@ -90,8 +90,8 @@ public class JPanelSituationDataFromRobot extends JPanel {
             lblVitesseChenilleGauche.setText(strVitesseChenilleGauche+ dataRobot.getvChenilleGauche().toString());
             lblTemperature.setText(strTemperature+dataRobot.getTemperature().toString());
             lblHumidite.setText(strHumidite+dataRobot.getHumidite().toString());
-            lblAngle.setText(strANgle+ (dataRobot.getAngle() - 90));
-            lblDistance.setText(strDistance+ dataRobot.getDistance().toString());
+            lblAngle.setText(strANgle + (dataRobot.getAngle() - 90));
+            lblDistance.setText(strDistance + dataRobot.getDistance());
         }catch (Exception e) {
             System.out.println(" JPanelSituationDataFromRobot - dateUpdated() ");
         }

@@ -16,11 +16,12 @@ public final class globalCte {
         RobotStop(2, "RobotStop", 0),
         RobotDroite(3, "RobotDroite", 2),
         RobotGauche(4, "RobotGauche", 2),
-        RadarDroite(5, "RadarDroite", 1),
-        RadarGauche(6, "RadarGauche", 1),
-        DataRobot(7, "DataRobotAll", 3),
-        SystemRobot(8,"RebootRobot", 0),
-        undefined(7, "Unedefined", 4);
+        RobotRadarDroite(5, "RadarDroite", 1),
+        RobotRadarGauche(6, "RadarGauche", 1),
+        RobotData(7, "DataRobotAll", 3),
+        RobotControl(8, "KeepALive", 3),
+        SystemRobot(9, "RebootRobot", 0),
+        undefined(10, "Unedefined", 4);
         final Integer value;
         final String label;
         final Integer priority;

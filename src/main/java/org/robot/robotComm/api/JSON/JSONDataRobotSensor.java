@@ -22,7 +22,7 @@ public class JSONDataRobotSensor {
     private final Float temperature;
     private final Float humidite;
     private final Integer angle;
-    private final Float distance;
+    private final Integer distance;
 
 
     public JSONDataRobotSensor(@JsonProperty("date") String date,
@@ -48,7 +48,7 @@ public class JSONDataRobotSensor {
         this.temperature = Float.valueOf(temperature);
         this.humidite = Float.valueOf(humidite);
         this.angle = Integer.valueOf(angle);
-        this.distance = Float.valueOf(distance);
+        this.distance = Integer.valueOf(distance);
     }
 
     public JSONDataRobotSensor() {
@@ -62,7 +62,7 @@ public class JSONDataRobotSensor {
         this.temperature = Float.valueOf(0f);
         this.humidite = Float.valueOf(0f);
         this.angle = Integer.valueOf(0);
-        this.distance = Float.valueOf(0f);
+        this.distance = Integer.valueOf(0);
     }
 
     public LocalDateTime getDateTime() {
@@ -105,7 +105,7 @@ public class JSONDataRobotSensor {
         return angle;
     }
 
-    public Float getDistance() {
+    public int getDistance() {
         return distance;
     }
 

@@ -34,9 +34,11 @@ public class JPanelAction extends JPanel {
         FntGUI.setBagContraint(gbc, 0, 1, 1, 1, 1, 0.1f);
         JButton btnLeft = new JButton(enActionRobot.RobotGauche.toString());
         this.add(btnLeft, gbc);
+
         FntGUI.setBagContraint(gbc, 1, 1, 1, 1, 1, 0.1f);
         JButton btnStop = new JButton(enActionRobot.RobotStop.toString());
         this.add(btnStop, gbc);
+
         FntGUI.setBagContraint(gbc, 2, 1, 1, 1, 1, 0.1f);
         JButton btnRight = new JButton(enActionRobot.RobotDroite.toString());
         this.add(btnRight, gbc);
@@ -54,7 +56,6 @@ public class JPanelAction extends JPanel {
         FntGUI.setBagContraint(gbc, 0, 5, 3, 1, 1, 0.1f);
         this.add(sliderRadar, gbc);
 
-
         JButton btnReset = new JButton("Reset");
         FntGUI.setBagContraint(gbc, 3, 0, 1, 4);
         this.add(btnReset, gbc);
@@ -71,17 +72,14 @@ public class JPanelAction extends JPanel {
         btnDown.addActionListener(e -> {
             this.robot.addAction(enActionRobot.RobotArriere, sliderVitesse.getValue());
         });
-
         btnStop.addActionListener(e -> {
             this.robot.addAction(enActionRobot.RobotStop, sliderVitesse.getValue());
         });
-
         btnLeft.addActionListener(e -> {
             this.robot.addAction(enActionRobot.RobotGauche, sliderVitesse.getValue());
         });
-
         btnRight.addActionListener(e -> {
-            robot.addAction(enActionRobot.RobotDroite, sliderVitesse.getValue());
+            this.robot.addAction(enActionRobot.RobotDroite, sliderVitesse.getValue());
         });
 
         btnReset.addActionListener(e->{
@@ -124,15 +122,13 @@ public class JPanelAction extends JPanel {
                 JSlider slider = (JSlider) evt.getSource();
                 if (!slider.getValueIsAdjusting()) {
                     if (sliderRadar.getValue() < 0)
-                        robot.addAction(enActionRobot.RadarDroite, Math.abs(sliderRadar.getValue()));
-                    else robot.addAction(enActionRobot.RadarGauche, sliderRadar.getValue());
+                        robot.addAction(enActionRobot.RobotRadarDroite, Math.abs(sliderRadar.getValue()));
+                    else robot.addAction(enActionRobot.RobotRadarGauche, sliderRadar.getValue());
                 }
             }
         });
-
         // render du text Area
         txtArea.setLineWrap(true);
-
     }
 
 
