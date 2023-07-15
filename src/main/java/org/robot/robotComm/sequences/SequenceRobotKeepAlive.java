@@ -8,16 +8,13 @@ import static org.robot.constante.globalCte.enActionRobot.RobotData;
 
 public class SequenceRobotKeepAlive extends Sequence {
 
-    public SequenceRobotKeepAlive(RobotAction action) {
-        super(action);
+    public SequenceRobotKeepAlive() {
+        super(new RobotAction(RobotControl, -1));
         ////////////////////////////////////////////////////////////////////////////////////////
         // gestion du radar
         ////////////////////////////////////////////////////////////////////////////////////////
-        actions.put(LocalDateTime.now().minusMillis(5), new RobotAction(RobotData, 0));
-
-        actions.put(LocalDateTime.now().minusMillis(4), new RobotAction(RobotControl, 0));
-
-
+        actions.put(LocalDateTime.now().minusMillis(10), new RobotAction(RobotData, 0));
+        actions.put(LocalDateTime.now().minusMillis(5), new RobotAction(RobotControl, 0));
     }
 
 

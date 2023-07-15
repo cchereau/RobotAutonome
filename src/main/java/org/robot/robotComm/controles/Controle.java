@@ -9,7 +9,7 @@ public class Controle {
     }
 
     public boolean isValidated(int valeur) {
-        return valeur >= VALEUR_DISTANCE_SECU;
+        return valeur <= VALEUR_DISTANCE_SECU;
     }
 
 }

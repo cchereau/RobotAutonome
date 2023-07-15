@@ -13,6 +13,7 @@ public class RobotAction {
     private enActionRobot actionRobot;
     private Integer Value;
     private Boolean blnExecuted;
+
     public RobotAction(enActionRobot actionRobot, Integer value) {
         this.dateTime = LocalDateTime.now();
         this.actionRobot = actionRobot;
@@ -25,14 +26,24 @@ public class RobotAction {
     public Integer getValue() {
         return Value;
     }
+
     public LocalDateTime getDateTime() {
         return dateTime;
     }
+
     public Boolean isExecuted() {
         return this.blnExecuted;
     }
+
     public void isExecuted(Boolean _blnExecuted) {
         this.blnExecuted = _blnExecuted;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof RobotAction) &&
+                (((RobotAction) o).actionRobot.equals(this.actionRobot))
+                && (((RobotAction) o).Value == this.Value);
     }
 }
 

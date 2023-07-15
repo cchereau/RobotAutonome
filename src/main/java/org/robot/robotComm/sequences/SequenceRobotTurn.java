@@ -1,6 +1,6 @@
 package org.robot.robotComm.sequences;
 
-import org.joda.time.LocalDateTime;
+import org.robot.constante.globalCte.enActionRobot;
 import org.robot.robotComm.RobotAction;
 
 import static org.robot.constante.globalCte.enActionRobot.*;
@@ -9,25 +9,19 @@ public class SequenceRobotTurn extends Sequence {
 
     public SequenceRobotTurn(RobotAction action) {
         super(action);
+        enActionRobot actionDirection;
+        int angleRotation = action.getValue();
+
+        if (action.getActionRobot().equals(RobotDroite)) actionDirection = RobotDroite;
+        else actionDirection = RobotGauche;
+
         ////////////////////////////////////////////////////////////////////////////////////////
         // gestion du radar
         ////////////////////////////////////////////////////////////////////////////////////////
-        actions.put(LocalDateTime.now().minusMillis(6), new RobotAction(RobotRadarDroite, action.getValue()));
-
-        actions.put(LocalDateTime.now().minusMillis(5), new RobotAction(RobotData, 0));
-
         // action de virage
-        actions.put(LocalDateTime.now().minusMillis(4), new RobotAction(RobotDroite, action.getValue()));
-
-        // action de virage
-        actions.put(LocalDateTime.now().minusMillis(3), new RobotAction(RobotStop, action.getValue()));
-
-        // remise à zero du radar
-        actions.put(LocalDateTime.now().minusMillis(2), new RobotAction(RobotRadarGauche, 0));
-
-        // arret du virage
-        actions.put(LocalDateTime.now().minusMillis(1), new RobotAction(RobotStop, 0));
-
+        actions.put(action.getDateTime().minusMillis(10), new RobotAction(RobotStop, -1));
+        actions.put(action.getDateTime().minusMillis(5), new RobotAction(actionDirection, angleRotation));
+        actions.put(action.getDateTime().minusMillis(0), new RobotAction(RobotData, -1));
     }
 
 

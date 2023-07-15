@@ -72,27 +72,23 @@ public class JPanelSituationDataFromRobot extends JPanel {
         FntGUI.setBagContraint(gbc, 1, 5, 1, 1, 1, 0.1f);
         this.add(lblDistance, gbc);
 
-
-
-
     }
 
 
-
-    public void set(JSONDataRobotSensor dataRobot) {
-        try{
-            lblDate.setText( strDateTIme+ dataRobot.getDateTime().toString());
-            lblLongitude.setText(strLongitude+ dataRobot.getLongitude().toString());
-            lblLatitude.setText(strLatitude+ dataRobot.getLatitude().toString());
-            lblAzimut.setText(strAzimut+ dataRobot.getAzimut().toString());
-            lblVitesse.setText(strVitesse+ dataRobot.getVitesse().toString());
-            lblVitesseChenilleDroite.setText(strVitesseChenilleDroite+ dataRobot.getvChenilleDroite().toString());
-            lblVitesseChenilleGauche.setText(strVitesseChenilleGauche+ dataRobot.getvChenilleGauche().toString());
-            lblTemperature.setText(strTemperature+dataRobot.getTemperature().toString());
-            lblHumidite.setText(strHumidite+dataRobot.getHumidite().toString());
+    public void setDataRobot(JSONDataRobotSensor dataRobot) {
+        try {
+            lblDate.setText(strDateTIme + dataRobot.getDateTime().toString());
+            lblLongitude.setText(strLongitude + dataRobot.getLongitude().toString());
+            lblLatitude.setText(strLatitude + dataRobot.getLatitude().toString());
+            lblAzimut.setText(strAzimut + dataRobot.getAzimut().toString());
+            lblVitesse.setText(strVitesse + dataRobot.getVitesse().toString());
+            lblVitesseChenilleDroite.setText(strVitesseChenilleDroite + dataRobot.getvChenilleDroite().toString());
+            lblVitesseChenilleGauche.setText(strVitesseChenilleGauche + dataRobot.getvChenilleGauche().toString());
+            lblTemperature.setText(strTemperature + dataRobot.getTemperature().toString());
+            lblHumidite.setText(strHumidite + dataRobot.getHumidite().toString());
             lblAngle.setText(strANgle + (dataRobot.getAngle() - 90));
             lblDistance.setText(strDistance + dataRobot.getDistance());
-        }catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(" JPanelSituationDataFromRobot - dateUpdated() ");
         }
     }
@@ -101,32 +97,3 @@ public class JPanelSituationDataFromRobot extends JPanel {
 
 
 
-
-
- /*
-        // initialisaition du timer
-        timer = new Timer(2000, new ActionListener() {
-             @Override
-             public void actionPerformed(ActionEvent e) {
-                 try {
-                     JSONReturnStatus data = robot.getRobotStatus();
-                     lblDate.setText( strDateTIme+ data.getDateTime().toString());
-                     lblLongitude.setText(strLongitude+ data.getLongitude().toString());
-                     lblLatitude.setText(strLatitude+ data.getLatitude().toString());
-                     lblAzimut.setText(strAzimut+ data.getAzimut().toString());
-                     lblVitesse.setText(strVitesse+ data.getVitesse().toString());
-                     lblVitesseChenilleDroite.setText(strVitesseChenilleDroite+ data.getvChenilleDroite().toString());
-                     lblVitesseChenilleGauche.setText(strVitesseChenilleGauche+ data.getvChenilleGauche().toString());
-                     lblTemperature.setText(strTemperature+data.getTemperature().toString());
-                     lblHumidite.setText(strHumidite+data.getHumidite().toString());
-                     lblAngle.setText(strANgle+ Integer.toString(data.getAngle()-90));
-                     lblDistance.setText(strDistance+ data.getDistance().toString());
-                 } catch (Exception ex) {
-                     throw new RuntimeException(ex);
-                 }
-             }
-         });
-        timer.start();
-    }
-}
-*/

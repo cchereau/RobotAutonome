@@ -5,8 +5,8 @@ import org.robot.frame.panelRobot.JPanelSituation;
 import org.robot.frame.panelRobot.JPanelSituationDataFromRobot;
 import org.robot.robotComm.EventListnerRobot;
 import org.robot.robotComm.Robot;
-import org.robot.robotComm.api.JSON.JSONDataRobotSensor;
 import org.robot.robotComm.api.JSON.JSONDataRobotReturnAction;
+import org.robot.robotComm.api.JSON.JSONDataRobotSensor;
 
 import javax.swing.*;
 import javax.swing.event.InternalFrameEvent;
@@ -35,7 +35,6 @@ public class JInternalFrameRobot extends JInternalFrame implements EventListnerR
             @Override
             public void internalFrameOpened(InternalFrameEvent e) {
                 System.out.println("JInternalFrameRobot.java  -  internal Frame Opened");
-
             }
 
             @Override
@@ -112,13 +111,13 @@ public class JInternalFrameRobot extends JInternalFrame implements EventListnerR
 
     @Override
     public void DataRobotReady(JSONDataRobotSensor dataRobot) {
-        panelDataFromRobot.set(robot.getDataRobot());
+        panelDataFromRobot.setDataRobot(dataRobot);
 
     }
 
     @Override
     public void DataReturnActionRobot(JSONDataRobotReturnAction dataReturn) {
-        panelAction.setDataRobotReturnAction(robot.getDataRobotResultAction());
+        panelAction.setDataRobotReturnAction(dataReturn);
 
     }
 

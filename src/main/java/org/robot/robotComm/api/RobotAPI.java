@@ -1,7 +1,6 @@
 package org.robot.robotComm.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.robot.constante.globalCte.*;
 import org.robot.robotComm.api.JSON.JSONDataRobotReturnAction;
 import org.robot.robotComm.api.JSON.JSONDataRobotSensor;
 
@@ -20,7 +19,8 @@ public class RobotAPI {
     private boolean blnDebug = false;
 
 
-    public RobotAPI() {
+    public RobotAPI(Boolean blnDebug) {
+        this.blnDebug = blnDebug;
     }
 
     public JSONDataRobotSensor getDataRobot() {
